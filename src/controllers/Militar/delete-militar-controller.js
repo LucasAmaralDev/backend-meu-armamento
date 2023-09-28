@@ -31,17 +31,9 @@ class DeleteMilitarModel {
                 }
             });
 
-            const verificaAcautelamento = acautelamentos.some(acautelamento => {
-
-                if (acautelamento.dataValues.dataDevolucao === null) {
-                    return true
-                }
-
-            })
-
             // Se o militar possuir acautelamentos em aberto, não é possivel exclui-lo
-            if (verificaAcautelamento) {
-                return res.status(400).json({ error: 'Militar possui acautelamentos em aberto, não é possivel exclui-lo!' })
+            if (acautelamentos.length > 0) {
+                return res.status(400).json({ error: 'Não é possivel deletar um militar que possui registros de Acautelamento' })
             }
 
             // Deletando o militar
