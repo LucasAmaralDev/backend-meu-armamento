@@ -28,7 +28,7 @@ class DeleteArmaController {
                 }
             })
 
-            if (acautelamento) {
+            if (acautelamento.length > 0) {
                 return res.status(400).json({ error: 'Não é possivel excluir uma arma que possui acautelamentos, por favor marque o estado da arma como BAIXADA' })
             }
 
