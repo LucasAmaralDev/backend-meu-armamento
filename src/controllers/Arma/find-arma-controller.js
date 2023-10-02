@@ -1,5 +1,7 @@
 const { ArmaModel } = require('../../models/Arma-model');
 const { ArmeiroModel } = require('../../models/Armeiro-model');
+const { TipoArmaModel } = require('../../models/TipoArma-model');
+const { FabricanteModel } = require('../../models/Fabricante-model');
 
 class FindArmaController {
 
@@ -8,11 +10,23 @@ class FindArmaController {
         try {
 
             const armas = await ArmaModel.findAll({
-                include: {
-                    model: ArmeiroModel,
-                    as: 'armeiro',
-                    attributes: ['nome']
-                }
+                include: [
+                    {
+                        model: ArmeiroModel,
+                        as: 'armeiro',
+                        attributes: ['nome']
+                    },
+                    {
+                        model: TipoArmaModel,
+                        as: 'tipoArma',
+                        attributes: ['tipo']
+                    },
+                    {
+                        model: FabricanteModel,
+                        as: 'fabricanteArma',
+                        attributes: ['nome']
+                    }
+                ]
             })
 
             if (!armas) {
@@ -20,14 +34,14 @@ class FindArmaController {
             }
 
             return res.status(200).json(armas)
-            
+
         } catch (error) {
-
-            return res.status(400).json({ error: 'Erro ao buscar armas' })
-
             
+            return res.status(400).json({ error: error })
+
+
         }
-        
+
     }
 
     async findOne(req, res) {

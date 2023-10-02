@@ -1,3 +1,4 @@
+const { BatalhaoModel } = require('../../models/Batalhao-model');
 const { MilitarModel } = require('../../models/Militar-model');
 
 
@@ -18,7 +19,7 @@ class AddMilitarController {
             }
 
             //Verificando se os dados são consistentes
-            if (typeof registroMilitar !== 'string' || typeof nome !== 'string' || typeof batalhao !== 'string' || typeof armeiro_id !== 'number') {
+            if (typeof registroMilitar !== 'string' || typeof nome !== 'string' || typeof armeiro_id !== 'number') {
                 return res.status(400).json({ error: 'Dados inconsistentes' })
             }
 
@@ -29,11 +30,18 @@ class AddMilitarController {
                 return res.status(400).json({ error: 'Usuário já cadastrado' })
             }
 
+            //Verificando se o batalhão existe
+            const batalhaoExiste = await BatalhaoModel.findOne({ where: { id: batalhao } });
+
+            if (!batalhaoExiste) {
+                return res.status(400).json({ error: 'Batalhão não cadastrado' })
+            }
+
             //Criando usuário
             const militar = await MilitarModel.create({
                 registroMilitar,
                 nome,
-                batalhao,
+                batalhao: Number(batalhao),
                 dataCadastro: new Date().toISOString().split('T')[0],
                 armeiro_id
             })

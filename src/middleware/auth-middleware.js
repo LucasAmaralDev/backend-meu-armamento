@@ -38,6 +38,7 @@ function authMiddleware(req, res, next){
                 }
 
                 req.id = dados.id;
+                console.log(req.id)
                 next();
 
             }

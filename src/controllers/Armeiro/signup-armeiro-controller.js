@@ -63,6 +63,7 @@ class SignupArmeiroController {
         } catch (error) {
 
             //Retornando erro
+            console.log(error)
             return res.status(400).json({ error: 'Erro ao criar armeiro' })
 
         }

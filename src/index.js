@@ -12,7 +12,9 @@ const { routerArmas } = require('./routes/arma-route');
 const { routerMilitar } = require('./routes/militar-route');
 const { routerAcautelamento } = require('./routes/acautelamento-route');
 const { routerDashboard } = require('./routes/dashboard-route');
-
+const { routerFabricante } = require('./routes/fabricante-route');
+const { routerTipoArma } = require('./routes/tipoArma-route');
+const { routerBatalhao } = require('./routes/batalhao-route');
 
 // Configurações
 
@@ -26,6 +28,9 @@ app.use(routerArmas)
 app.use(routerMilitar)
 app.use(routerAcautelamento)
 app.use(routerDashboard)
+app.use(routerFabricante)
+app.use(routerTipoArma)
+app.use(routerBatalhao)
 
 
 

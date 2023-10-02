@@ -1,5 +1,7 @@
 const { ArmaModel } = require('../../models/Arma-model');
 const { AcautelamentoModel } = require('../../models/Acautelamento-model');
+const { TipoArmaModel } = require('../../models/TipoArma-model');
+const { FabricanteModel } = require('../../models/Fabricante-model');
 
 class UpdateArmaController {
 
@@ -15,14 +17,10 @@ class UpdateArmaController {
             }
 
             // Recebendo os dados da arma e verificando se realmente foram informados
-            const { numeroSerie, fabricante, modelo, calibre, capacidadeCarregador, estadoConservacao, tipo, anoFabricacao } = req.body;
+            const { numeroSerie, fabricante, modelo, calibre, capacidadeCarregador, estadoConservacao, emUso, tipo, anoFabricacao } = req.body;
 
-            if (!numeroSerie && !fabricante && !modelo && !calibre && !capacidadeCarregador && !estadoConservacao && !tipo && !anoFabricacao) {
+            if (!numeroSerie && !fabricante && !modelo && !calibre && !capacidadeCarregador && !estadoConservacao && !tipo && !anoFabricacao && !emUso) {
                 return res.status(400).json({ error: 'Dados ausentes' })
-            }
-
-            if (typeof numeroSerie !== 'string' && typeof fabricante !== 'string' && typeof modelo !== 'string' && typeof tipo !== 'string' && typeof calibre !== 'string' && typeof capacidadeCarregador !== 'number' && typeof estadoConservacao !== 'string' && typeof anoFabricacao !== 'number') {
-                return res.status(400).json({ error: 'Dados inconsistentes' })
             }
 
             if (estadoConservacao) {
@@ -31,12 +29,33 @@ class UpdateArmaController {
                 }
             }
 
+            //Verificando se o tipo da existe
             if (tipo) {
 
-                if (tipo !== "PISTOLA" && tipo !== "REVOLVER" && tipo !== "ESPINGARDA" && tipo !== "FUZIL" && tipo !== "SUBMETRALHADORA" && tipo !== "CARABINA" && tipo !== "ESCOPETA") {
+                const tipoExiste = await TipoArmaModel.findOne({
+                    where: {
+                        id: tipo
+                    }
+                })
+                
+                if (!tipoExiste) {
+                    return res.status(400).json({ error: 'Tipo de arma não cadastrado' })
+                }
+            }
 
-                    return res.status(400).json({ error: 'Tipo de arma inválido' })
+            // Verificando se o fabricante existe
+            if (fabricante){
 
+                const fabricanteExiste = await FabricanteModel.findOne({
+                    where: {
+                        id: fabricante
+                    }
+                })
+
+                if (!fabricanteExiste) {
+                    return res.status(400).json({
+                        error: 'Fabricante não existe'
+                    })
                 }
 
             }
@@ -70,6 +89,11 @@ class UpdateArmaController {
 
             if (!arma) {
                 return res.status(404).json({ error: 'Arma não encontrada' })
+            }
+
+            // verificando se em uso esta marcado true
+            if (arma.emUso === true) {
+                return res.status(400).json({ error: 'Arma em uso, não é possivel atualiza-la' })
             }
 
             // Atualizando a arma

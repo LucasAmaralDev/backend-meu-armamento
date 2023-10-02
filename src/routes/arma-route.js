@@ -13,11 +13,11 @@ const routerArmas = Router()
 
 routerArmas.post("/arma/add", authMiddleware, addArmaController.add)
 
-routerArmas.get("/arma/find", authMiddleware, findArmaController.findAll)  
+routerArmas.get("/arma/find", authMiddleware, findArmaController.findAll)
 routerArmas.get("/arma/find/:id", authMiddleware, findArmaController.findOne)
 
 routerArmas.put("/arma/update/:id", authMiddleware, updateArmaController.update)
 
 routerArmas.delete("/arma/delete/:id", authMiddleware, deleteArmaController.delete)
 
-module.exports = {routerArmas}
+module.exports = { routerArmas }

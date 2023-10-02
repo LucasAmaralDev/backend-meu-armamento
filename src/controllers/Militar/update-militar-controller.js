@@ -1,3 +1,4 @@
+const { BatalhaoModel } = require('../../models/Batalhao-model');
 const { MilitarModel } = require('../../models/Militar-model');
 
 class UpdateMilitarController {
@@ -12,7 +13,6 @@ class UpdateMilitarController {
             // Verifica se o id foi informado
             if (!id) {
                 return res.status(400).json({ error: 'Id não informado' })
-
             }
 
             // Recuperando os dados do corpo da requisição
@@ -35,8 +35,12 @@ class UpdateMilitarController {
                 return res.status(400).json({ error: 'Nome inválido' })
             }
 
-            if (batalhao && typeof batalhao !== 'string') {
-                return res.status(400).json({ error: 'Batalhão inválido' })
+            if (batalhao) {
+                const batalhaoExiste = await BatalhaoModel.findByPk(batalhao);
+
+                if (!batalhaoExiste) {
+                    return res.status(400).json({ error: 'Batalhão não cadastrado' })
+                }
             }
 
             const militar = await MilitarModel.findByPk(id);

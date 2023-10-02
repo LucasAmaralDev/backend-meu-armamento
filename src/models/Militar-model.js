@@ -19,8 +19,14 @@ class MilitarModel extends Model {
                 allowNull: false
             },
             batalhao: {
-                type: DataTypes.STRING,
-                allowNull: false
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'batalhao',
+                    key: 'id',
+                    onUpdate: 'CASCADE',
+                    onDelete: 'CASCADE'
+                }
             },
             dataCadastro: {
                 type: DataTypes.DATEONLY,
@@ -41,6 +47,7 @@ class MilitarModel extends Model {
     static associate(models) {
         this.belongsTo(models.Armeiro, { foreignKey: 'armeiro_id', as: 'armeiro' });
         this.hasMany(models.Acautelamento, { foreignKey: 'militar_id', as: 'acautelamentos' });
+        this.belongsTo(models.Batalhao, { foreignKey: 'batalhao', as: 'batalhaoMilitar' });
     }
 
 }

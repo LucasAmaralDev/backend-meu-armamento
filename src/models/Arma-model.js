@@ -16,9 +16,20 @@ class ArmaModel extends Model {
                 unique: true
             },
             fabricante: {
-                type: DataTypes.STRING,
-                allowNull: false
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'fabricante',
+                    key: 'id',
+                    onUpdate: 'CASCADE',
+                    onDelete: 'CASCADE'
+                }
             },
+            emUso: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false
+            }
+            ,
             modelo: {
                 type: DataTypes.STRING,
                 allowNull: false
@@ -36,8 +47,14 @@ class ArmaModel extends Model {
                 allowNull: false
             },
             tipo: {
-                type: DataTypes.STRING,
-                allowNull: false
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'tipoArma',
+                    key: 'id',
+                    onUpdate: 'CASCADE',
+                    onDelete: 'CASCADE'
+                }
             },
             dataCadastro: {
                 type: DataTypes.DATEONLY,
@@ -62,6 +79,8 @@ class ArmaModel extends Model {
     static associate(models) {
         this.belongsTo(models.Armeiro, { foreignKey: 'armeiro_id', as: 'armeiro' });
         this.hasMany(models.Acautelamento, { foreignKey: 'arma_id', as: 'acautelamentos' });
+        this.belongsTo(models.TipoArma, { foreignKey: 'tipo', as: 'tipoArma' });
+        this.belongsTo(models.Fabricante, { foreignKey: 'fabricante', as: 'fabricanteArma' });
     }
 
 }

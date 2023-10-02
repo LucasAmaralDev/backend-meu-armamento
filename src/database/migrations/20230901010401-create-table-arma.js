@@ -47,6 +47,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      emUso: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
       armeiro_id: {
         type: Sequelize.INTEGER,
         allowNull: false,

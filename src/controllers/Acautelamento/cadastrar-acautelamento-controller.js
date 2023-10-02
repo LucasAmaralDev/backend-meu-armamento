@@ -63,6 +63,20 @@ class CadastrarAcautelamentoController {
                 return res.status(400).json({ error: 'Erro ao acautelar arma' });
             }
 
+            // Defininido a arma como em uso
+            const armaAtualizada = await ArmaModel.update({
+                emUso: true
+            }, {
+                where: {
+                    id: arma_id
+                }
+            })
+
+            if (!armaAtualizada) {
+                acautelamento.destroy();
+                return res.status(400).json({ error: 'Erro ao atualizar arma' });
+            }
+
             //Atualizando o status da arma
             return res.status(200).json(acautelamento);
 

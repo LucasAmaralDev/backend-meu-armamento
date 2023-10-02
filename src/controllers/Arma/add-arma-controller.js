@@ -1,4 +1,6 @@
-		const { ArmaModel } = require('../../models/Arma-model');
+const { ArmaModel } = require('../../models/Arma-model');
+const { FabricanteModel } = require('../../models/Fabricante-model')
+const { TipoArmaModel } = require('../../models/TipoArma-model')
 
 class AddArmaController {
 
@@ -11,32 +13,48 @@ class AddArmaController {
             const armeiro_id = id;
 
             // Recebendo os dados da arma para cadastro
-            const { numeroSerie, fabricante, modelo, calibre, capacidadeCarregador, estadoConservacao, tipo, anoFabricacao } = req.body;
-
+            const { numeroSerie, fabricante, modelo, calibre, capacidadeCarregador, estadoConservacao, tipo, anoFabricacao} = req.body;
+            console.log(numeroSerie, fabricante, modelo, calibre, capacidadeCarregador, estadoConservacao, tipo, anoFabricacao)
+            console.log(armeiro_id)
             //Verificando se os dados foram recebidos
-            if (!numeroSerie || !fabricante || !modelo || !calibre || !capacidadeCarregador || !estadoConservacao || !tipo || !anoFabricacao || !armeiro_id) {
+            if (!numeroSerie || !fabricante || !modelo || !calibre || !capacidadeCarregador || !estadoConservacao || !tipo || !anoFabricacao || !armeiro_id ) {
                 return res.status(400).json({ error: 'Dados ausentes' })
             }
 
-            //Verificando se o tipo da arma é valido
-            if (tipo !== "PISTOLA" && tipo !== "REVOLVER" && tipo !== "ESPINGARDA" && tipo !== "FUZIL" && tipo !== "SUBMETRALHADORA" && tipo !== "CARABINA" && tipo !== "ESCOPETA") {
-                return res.status(400).json({ error: 'Tipo de arma inválido' })
+            //Verificando se o tipo da existe
+            const tipoArmaExiste = await TipoArmaModel.findOne({
+                where: {
+                    id: tipo
+                }
+            })
+
+            if (!tipoArmaExiste) {
+                return res.status(400).json({
+                    error: 'Tipo de Arma não cadastrado no banco de dados'
+                })
+            }
+
+            //Verificando se o fabricante existe
+            const fabricanteExiste = await FabricanteModel.findAll({
+                where: {
+                    id: fabricante
+                }
+            })
+
+            if (!fabricanteExiste){
+                return res.status(400).json({
+                    error: "Fabricante não cadastrado"
+                })
             }
 
             //Verificando se o estado de conservação é valido
-            if (estadoConservacao !== "NOVO" && estadoConservacao !== "EXELENTE" && estadoConservacao !== "BOM" && estadoConservacao !== "REGULAR" && estadoConservacao !== "BAIXADA"){
-                    return res.status(400).json({ error: 'Estado de conservação inválido' })
-                }
-
-            //Verificando se o ano de fabricação é valido
-            if (anoFabricacao > new Date().getFullYear()){
-                return res.status(400).json({ error: 'Ano de fabricação inválido' })
+            if (estadoConservacao !== "NOVO" && estadoConservacao !== "EXCELENTE" && estadoConservacao !== "BOM" && estadoConservacao !== "REGULAR" && estadoConservacao !== "BAIXADA") {
+                return res.status(400).json({ error: 'Estado de conservação inválido' })
             }
 
-
-            //Verificando se os dados são consistentes
-            if (typeof numeroSerie !== 'string' || typeof fabricante !== 'string' || typeof modelo !== 'string' || typeof tipo !== 'string' || typeof calibre !== 'string' || typeof capacidadeCarregador !== 'number' || typeof estadoConservacao !== 'string' || typeof anoFabricacao !== 'number' || typeof armeiro_id !== 'number') {
-                return res.status(400).json({ error: 'Dados inconsistentes' })
+            //Verificando se o ano de fabricação é valido
+            if (anoFabricacao > new Date().getFullYear()) {
+                return res.status(400).json({ error: 'Ano de fabricação inválido' })
             }
 
             //Verificando se o numero de série já foi registrado
@@ -54,7 +72,8 @@ class AddArmaController {
                 calibre,
                 capacidadeCarregador,
                 estadoConservacao,
-                tipo,
+                tipo: Number(tipo),
+                emUso: false,
                 anoFabricacao,
                 armeiro_id,
                 dataCadastro: new Date().toISOString().split('T')[0]

@@ -21,6 +21,10 @@ class DeleteArmaController {
                 return res.status(404).json({ error: 'Arma não encontrada' })
             }
 
+            if (arma.emUso) {
+                return res.status(400).json({ error: 'Não é possivel excluir uma arma que está em uso' })
+            }
+
             // Verificando se a arma possui acautelamentos
             const acautelamento = await AcautelamentoModel.findAll({
                 where: {
