@@ -8,7 +8,7 @@ class SignupArmeiroController {
 
         try {
 
-            const { nome, registroMilitar, senha } = req.body;
+            const { nome, registroMilitar, senha, email } = req.body;
 
             //Verificando se os dados foram recebidos
             if (!nome || !registroMilitar || !senha) {
@@ -41,7 +41,7 @@ class SignupArmeiroController {
             const senhaCriptografada = await bcrypt.hash(senha, salt);
 
             //Criando armeiro
-            const armeiro = await ArmeiroModel.create({ nome, registroMilitar, senha: senhaCriptografada });
+            const armeiro = await ArmeiroModel.create({ nome, registroMilitar, senha: senhaCriptografada, email });
 
             if (armeiro) {
                 const token = jwt.sign({
