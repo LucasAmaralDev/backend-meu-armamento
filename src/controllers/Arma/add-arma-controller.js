@@ -14,8 +14,6 @@ class AddArmaController {
 
             // Recebendo os dados da arma para cadastro
             const { numeroSerie, fabricante, modelo, calibre, capacidadeCarregador, estadoConservacao, tipo, anoFabricacao} = req.body;
-            console.log(numeroSerie, fabricante, modelo, calibre, capacidadeCarregador, estadoConservacao, tipo, anoFabricacao)
-            console.log(armeiro_id)
             //Verificando se os dados foram recebidos
             if (!numeroSerie || !fabricante || !modelo || !calibre || !capacidadeCarregador || !estadoConservacao || !tipo || !anoFabricacao || !armeiro_id ) {
                 return res.status(400).json({ error: 'Dados ausentes' })
