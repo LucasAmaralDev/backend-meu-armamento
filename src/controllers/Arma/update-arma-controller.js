@@ -24,7 +24,7 @@ class UpdateArmaController {
             }
 
             if (estadoConservacao) {
-                if (estadoConservacao !== "NOVO" && estadoConservacao !== "EXELENTE" && estadoConservacao !== "BOM" && estadoConservacao !== "REGULAR" && estadoConservacao !== "BAIXADA") {
+                if (estadoConservacao !== "NOVO" && estadoConservacao !== "EXCELENTE" && estadoConservacao !== "BOM" && estadoConservacao !== "REGULAR" && estadoConservacao !== "BAIXADA") {
                     return res.status(400).json({ error: 'Estado de conservação inválido' })
                 }
             }
