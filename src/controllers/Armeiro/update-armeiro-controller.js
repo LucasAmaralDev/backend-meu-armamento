@@ -37,9 +37,16 @@ class UpdateArmeiroController {
             if (!armeiro) {
                 return res.status(404).json({ error: 'Armeiro não encontrado' })
             }
-
+            if (nome.length > 0 && email.length > 0) {
+                await armeiro.update({ nome, email, registroMilitar, fotoPerfil });
+            } else if (nome.length > 0) {
+                await armeiro.update({ nome, email: armeiro.email, registroMilitar, fotoPerfil });
+            }
+            else {
+                await armeiro.update({ nome: armeiro.nome, email, registroMilitar, fotoPerfil });
+            }
             //Atualizando armeiro
-            await armeiro.update({ nome, email, registroMilitar, fotoPerfil });
+
 
             return res.status(200).json({ message: 'Armeiro atualizado com sucesso' })
 
